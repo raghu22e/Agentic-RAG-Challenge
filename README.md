@@ -223,7 +223,8 @@ Content is **fictional** but structured like Indian UG handbooks for the assignm
 | NumPy / pandas binary errors in **global** Python | Always use the project **venv** |
 | OpenAI errors | Verify `OPENAI_API_KEY`, billing, and network; check Flask logs |
 
-##Example Input
+## Example Input
+
 Q.)What programs do u offer??
 Ans.)Based on the catalog excerpts, the program you're interested in is the B.Tech in Computer Science Engineering.
 
