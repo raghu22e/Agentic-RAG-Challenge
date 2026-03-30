@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catalog assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <header class="top simple-top">
+    <h1>Catalog assistant</h1>
+    <p class="tagline">Ask a question — the answer comes from your indexed PDFs.</p>
+  </header>
+
+  <main class="chat-shell">
+    <div id="messages" class="messages" aria-live="polite"></div>
+
+    <form id="chat-form" class="chat-form simple-form">
+      <input
+        type="text"
+        id="input"
+        name="message"
+        autocomplete="off"
+        placeholder="Type your question…"
+      />
+      <button type="submit" id="send-btn">Send</button>
+    </form>
+
+    <details class="extras">
+      <summary>Upload PDF or reindex</summary>
+      <div class="extras-inner">
+        <label class="upload-label">
+          <input type="file" id="upload" accept="application/pdf" hidden />
+          <span class="linkish">Choose PDF</span>
+        </label>
+        <button type="button" id="reindex" class="btn-secondary">Reindex all PDFs</button>
+      </div>
+    </details>
+  </main>
+
+  <script>
+    const messagesEl = document.getElementById('messages');
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('input');
+    const upload = document.getElementById('upload');
+    const reindexBtn = document.getElementById('reindex');
+    const CHAT_TIMEOUT_MS = 180000;
+
+    async function fetchJson(url, options = {}, timeoutMs = CHAT_TIMEOUT_MS) {
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), timeoutMs);
+      try {
+        const res = await fetch(url, { ...options, signal: ctrl.signal });
+        const text = await res.text();
+        const ct = (res.headers.get('content-type') || '').toLowerCase();
+        if (!ct.includes('application/json')) {
+          const preview = text.slice(0, 160).replace(/\s+/g, ' ').trim();
+          throw new Error(
+            preview.startsWith('<!') || preview.startsWith('<html')
+              ? 'Server returned HTML instead of JSON. Is the Flask app running?'
+              : 'Expected JSON: ' + preview
+          );
+        }
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          throw new Error('Invalid JSON from server.');
+        }
+        if (!res.ok) {
+          const parts = [data.error || data.detail || res.statusText || 'Request failed'];
+          if (data.hint) parts.push(data.hint);
+          throw new Error(parts.join('\n\n'));
+        }
+        return data;
+      } catch (e) {
+        if (e.name === 'AbortError') {
+          throw new Error('Request timed out. Try again or set RAG_FAST=1 in .env.');
+        }
+        const msg = String(e.message || e);
+        if (e.name === 'TypeError' && msg.toLowerCase().includes('fetch')) {
+          throw new Error('Cannot reach the server. Run: python main.py serve');
+        }
+        throw e;
+      } finally {
+        clearTimeout(tid);
+      }
+    }
+
+    function appendBubble(role, text) {
+      const div = document.createElement('div');
+      div.className = 'bubble ' + role;
+      div.textContent = text;
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function assistantAnswerText(data) {
+      const cr = (data.chat_reply || data.sections?.answer_or_plan || '').trim();
+      if (cr) return cr;
+      const n = (data.retrieved_chunks || []).length;
+      return n
+        ? 'No short answer was returned, but your PDFs were searched. Try rephrasing your question.'
+        : 'No text was found in your index. Add PDFs under data/ and reindex.';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      appendBubble('user', text);
+      input.value = '';
+      appendBubble('assistant', '…');
+      const pending = messagesEl.lastChild;
+      try {
+        const data = await fetchJson('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+        pending.textContent = assistantAnswerText(data);
+      } catch (err) {
+        pending.textContent = 'Error: ' + err.message;
+      }
+    });
+
+    upload.addEventListener('change', async () => {
+      const f = upload.files[0];
+      if (!f) return;
+      const fd = new FormData();
+      fd.append('file', f);
+      appendBubble('user', '[Uploaded ' + f.name + ']');
+      try {
+        const data = await fetchJson('/api/upload', { method: 'POST', body: fd }, 300000);
+        appendBubble('assistant', data.ok ? ('Indexed ' + data.chunks + ' chunks from ' + data.saved_as) : JSON.stringify(data));
+      } catch (e) {
+        appendBubble('assistant', 'Error: ' + e.message);
+      }
+      upload.value = '';
+    });
+
+    reindexBtn.addEventListener('click', async () => {
+      try {
+        const data = await fetchJson('/api/reindex', { method: 'POST' }, 300000);
+        alert(data.ok ? ('Reindexed ' + data.chunks + ' chunks') : JSON.stringify(data));
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    });
+  </script>
+</body>
+</html>

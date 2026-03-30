@@ -1,0 +1,33 @@
+{
+  "description": "Evaluation prompts aligned with data/academic_policy, data/courses, data/programme_requirements. Add expected_substrings per your real PDFs for accuracy scoring.",
+  "items": [
+    {"id": "pr1", "category": "prerequisite", "question": "From the course PDFs, what prerequisites are listed for one specific subject? Quote the course name and cite the PDF path and page.", "expected_substrings": [], "must_abstain": false},
+    {"id": "pr2", "category": "prerequisite", "question": "Which courses must be completed before a higher-level course according to the catalog? Give one example with citations.", "expected_substrings": [], "must_abstain": false},
+    {"id": "pr3", "category": "prerequisite", "question": "Is there a course with no prerequisites in the documents? If yes, name it and cite the source.", "expected_substrings": [], "must_abstain": false},
+    {"id": "pr4", "category": "prerequisite", "question": "List prerequisite rules mentioned in academic policy (if any) and cite the policy PDF.", "expected_substrings": [], "must_abstain": false},
+    {"id": "pr5", "category": "prerequisite", "question": "Compare prerequisite wording for two different courses using only the retrieved excerpts.", "expected_substrings": [], "must_abstain": false},
+    {"id": "pr6", "category": "prerequisite", "question": "What happens if a student lacks a prerequisite—does any policy document state a rule? Cite or abstain.", "expected_substrings": [], "must_abstain": false},
+    {"id": "pr7", "category": "prerequisite", "question": "For B.Tech students, does programme requirements mention any prerequisite policy at programme level?", "expected_substrings": [], "must_abstain": false},
+    {"id": "pr8", "category": "prerequisite", "question": "Extract one explicit prerequisite chain (A needed before B) from the course materials.", "expected_substrings": [], "must_abstain": false},
+    {"id": "pr9", "category": "prerequisite", "question": "Are co-requisites mentioned for any course? Answer only from documents.", "expected_substrings": [], "must_abstain": false},
+    {"id": "pr10", "category": "prerequisite", "question": "What credit value is associated with one course you find, and what are its prerequisites?", "expected_substrings": [], "must_abstain": false},
+
+    {"id": "ch1", "category": "chain", "question": "If a student has only completed first-year courses listed in the documents, what upper-level course are they still blocked from by prerequisites? Explain using citations.", "expected_substrings": [], "must_abstain": false},
+    {"id": "ch2", "category": "chain", "question": "Outline a plausible semester order for two related courses based strictly on stated prerequisites in the PDFs.", "expected_substrings": [], "must_abstain": false},
+    {"id": "ch3", "category": "chain", "question": "Does the programme requirements document imply an order of study that interacts with course prerequisites?", "expected_substrings": [], "must_abstain": false},
+    {"id": "ch4", "category": "chain", "question": "Identify a longest prerequisite chain you can support with evidence from the course PDFs.", "expected_substrings": [], "must_abstain": false},
+    {"id": "ch5", "category": "chain", "question": "Link academic policy (if present) to how prerequisites might be enforced, citing both policy and a course PDF if applicable.", "expected_substrings": [], "must_abstain": false},
+
+    {"id": "prog1", "category": "program", "question": "What are the eligibility criteria for B.Tech admission or continuation according to programme_requirements? Cite the PDF.", "expected_substrings": [], "must_abstain": false},
+    {"id": "prog2", "category": "program", "question": "What minimum marks, percentage, or entrance requirements are stated for B.Tech in the programme documents?", "expected_substrings": [], "must_abstain": false},
+    {"id": "prog3", "category": "program", "question": "Summarize degree completion rules (credits, duration, or core requirements) from programme_requirements with citations.", "expected_substrings": [], "must_abstain": false},
+    {"id": "prog4", "category": "program", "question": "Does the programme PDF list mandatory subjects or streams for B.Tech? Answer from excerpts only.", "expected_substrings": [], "must_abstain": false},
+    {"id": "prog5", "category": "program", "question": "What attendance or examination eligibility rules appear in academic_policy that apply to students?", "expected_substrings": [], "must_abstain": false},
+
+    {"id": "ni1", "category": "not_in_docs", "question": "What are prerequisites for course code FAKE9999?", "expected_substrings": [], "must_abstain": true},
+    {"id": "ni2", "category": "not_in_docs", "question": "What is the tuition fee for semester 5?", "expected_substrings": [], "must_abstain": true},
+    {"id": "ni3", "category": "not_in_docs", "question": "Who won the 2030 campus cricket tournament?", "expected_substrings": [], "must_abstain": true},
+    {"id": "ni4", "category": "not_in_docs", "question": "What is the exact date of the next university holiday?", "expected_substrings": [], "must_abstain": true},
+    {"id": "ni5", "category": "not_in_docs", "question": "Provide the hostel refund policy for a university not mentioned in the PDFs.", "expected_substrings": [], "must_abstain": true}
+  ]
+}

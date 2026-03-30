@@ -1,0 +1,12 @@
+# Slim stack: no langchain-community (avoids heavy NLTK/html import chain on some envs)
+flask>=3.0.0
+pypdf>=5.0.0
+sentence-transformers>=3.0.0
+faiss-cpu>=1.8.0
+numpy>=1.26.0,<2.3
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+langchain-core>=0.3.0
+langchain-openai>=0.2.0
+openai>=1.0.0
+reportlab>=4.2.0
