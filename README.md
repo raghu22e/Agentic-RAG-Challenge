@@ -1,4 +1,4 @@
-# Agentic RAG — Prerequisite & Course Planning Assistant
+<img width="1883" height="744" alt="image" src="https://github.com/user-attachments/assets/08335ac0-570a-4250-9ba1-c7c14b1639a9" /># Agentic RAG — Prerequisite & Course Planning Assistant
 
 End-to-end **RAG + multi-agent** assistant that ingests **your PDFs** under `data/` (**academic policy**, **courses**, **programme requirements / B.Tech eligibility**), answers **prerequisite** and **program** questions with **citations**, suggests **course plans**, and **abstains** when evidence is missing. **Flask** UI shows **retrieved chunks**, **source paths**, **highlight-style** excerpt panels, **structured sections**, and **agent reasoning steps**.
 
@@ -223,6 +223,17 @@ Content is **fictional** but structured like Indian UG handbooks for the assignm
 | NumPy / pandas binary errors in **global** Python | Always use the project **venv** |
 | OpenAI errors | Verify `OPENAI_API_KEY`, billing, and network; check Flask logs |
 
-## License
+##Example Input
+Q.)What programs do u offer??
+Ans.)Based on the catalog excerpts, the program you're interested in is the B.Tech in Computer Science Engineering.
 
-Synthetic data and code for educational / assignment use.
+Here are the key details about the program:
+
+*   **Program:** B.Tech Computer Science Engineering
+*   **Total Credits Required:** 160 credits
+*   **Program Structure:** The program is structured into Core Courses, AI/ML Electives, and Open Electives.
+*   **AI/ML Electives:** You can choose any two from a list that includes Machine Learning (CSE301), Artificial Intelligence (CSE302), Deep Learning (CSE303), and Data Mining (CSE304).
+*   **Project Requirement:** You must complete a Final Year Project worth 6 credits.
+*   **Internship Requirement:** A mandatory 8-week internship is required.
+  
+
